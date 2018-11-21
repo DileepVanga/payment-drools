@@ -1,0 +1,55 @@
+package rules
+ 
+import com.payment.beans.PaymentDetailsDTO
+
+
+rule "Rule for Physical Product"
+	when 
+		productObject: PaymentDetailsDTO(type == "physical product")
+	then
+		productObject.setSlip("Generate payment slip for :" + productObject.getType());
+		generateCommissionPaymentForAgent(productObject);
+	end
+
+rule "Rule for Book"
+	when 
+		productObject: PaymentDetailsDTO(type == "book")
+	then
+		productObject.setSlip("Generate payment slip for :" + productObject.getType());
+		generateCommissionPaymentForAgent(productObject);
+	end
+
+rule "Rule for Membership"
+	when
+		productObject: PaymentDetailsDTO(type == "membership")
+	then
+		productObject.setMsg("Activate member ship for the user logic followed");
+		//send email
+		sendEmail(productObject);
+	end
+
+rule "Rule for Upgrade Membership"
+	when
+		productObject: PaymentDetailsDTO(type == "upgrade membership")
+	then
+		productObject.setMsg("upgrade member ship logic followed");
+		//send email
+	    sendEmail(productObject);
+	end
+
+rule "Rule for Video"
+	when
+		productObject: PaymentDetailsDTO(type == "video")
+		// you can have additional attributes to check the video type/name: Learning to Ski
+	then
+		productObject.setMsg("add a free First Aid video to the packing slip (the result of a court decision in 1997). logic followed");
+	end
+
+
+function void sendEmail(PaymentDetailsDTO paymanetDetails) {
+    System.out.println("email Logic here");
+}
+
+function void generateCommissionPaymentForAgent(PaymentDetailsDTO paymanetDetails) {
+    System.out.println("generate a commission payment to the agent.");
+}
